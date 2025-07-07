@@ -460,6 +460,13 @@
     document.getElementById('targetDate').textContent =
       '출산 예정일: ' + targetDate.toLocaleDateString('ko-KR', options);
 
+    function isMobileByVisibility() {
+      const timeDetail = document.querySelector('.time-detail');
+      const style = window.getComputedStyle(timeDetail);
+      return style.display === 'none'; // 숨겨져 있다면 모바일 뷰
+    }
+
+
     function updateCountdown() {
       const kstNow = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Seoul" }));
       const difference = targetDate - kstNow;
@@ -479,7 +486,9 @@
       document.getElementById('progressFill').style.width = progressPercentage + '%';
 
       if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const days = isMobileByVisibility()
+          ? Math.ceil(difference / (1000 * 60 * 60 * 24))
+          : Math.floor(difference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
